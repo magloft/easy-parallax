@@ -1,6 +1,6 @@
 {
   "name": "easy-parallax",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/easy-parallax.js",
   "license": "MIT",
   "devDependencies": {
