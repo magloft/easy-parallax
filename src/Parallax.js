@@ -59,7 +59,7 @@ export default class Parallax {
   // Parallax functions
   initImg() {
     // find image element
-    let $imgElement = this.element.querySelector('img')
+    let $imgElement = Array.from(this.element.children).find(child => child.matches("img"))
     // check if dom element
     if (!($imgElement instanceof Element)) {
       $imgElement = null
@@ -90,7 +90,8 @@ export default class Parallax {
     return !(!this.image.src || this.image.src === 'none')
   }
 
-  update() {
+  update(options = {}) {
+    this.options = this.extend({}, this.options, options)
     if (this.image.useImgTag) {
       if (this.image.$original.src !== this.image.element.src) {
         this.image.element.src = this.image.$original.src
