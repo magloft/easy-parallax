@@ -219,10 +219,10 @@ export default class Parallax {
     }
 
     // remove additional dom elements
-    if (this.$clipStyles) {
+    if (this.$clipStyles && this.$clipStyles.parentNode) {
       this.$clipStyles.parentNode.removeChild(this.$clipStyles)
     }
-    if (this.image.$container) {
+    if (this.image.$container && this.image.$container.parentNode) {
       this.image.$container.parentNode.removeChild(this.image.$container)
     }
 
