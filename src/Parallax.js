@@ -104,13 +104,18 @@ export default class Parallax {
   }
 
   update(options = {}) {
-    this.options = Object.assign({}, this.options, options)
+    Object.assign(this.options, options)
     if (this.useImgTag) {
       if (this.image.src !== this.imageElement.src) {
         this.imageElement.src = this.image.src
       }
-    } else if (this.imageElement.style.backgroundImage !== this.container.style.backgroundImage) {
-      this.imageElement.style.backgroundImage = this.container.style.backgroundImage
+    } else {
+      this.container.style.backgroundImage = null
+      const backgroundImage = getStyle(this.container, 'background-image')
+      this.container.style.backgroundImage = 'none'
+      if (this.imageElement.style.backgroundImage !== backgroundImage) {
+        this.imageElement.style.backgroundImage = backgroundImage
+      }
     }
     this.stage.update()
   }
