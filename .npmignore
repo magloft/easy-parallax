@@ -1,4 +1,4 @@
-.babelrc
+.eslintignore
 .eslintrc.json
-gulpfile.babel.js
-index.html
+dist/index.html
+webpack.config.js

@@ -1,4 +1,4 @@
-import { requestAnimationFrame } from './Helpers'
+import { requestAnimationFrame } from './util'
 import Parallax from './Parallax'
 
 class Stage {
@@ -25,15 +25,43 @@ class Stage {
     return this.instanceID
   }
 
+  get(element) {
+    return this.parallaxList.find((parallax) => parallax.element === element)
+  }
+
+  contains(element) {
+    return this.get(element) != null
+  }
+
   add(element, options = {}) {
+    if (this.contains(element)) { return null }
     const parallax = new Parallax(this, element, options)
+    this.addToParallaxList(parallax)
     this.update()
     return parallax
   }
 
-  update() {
+  force(element, options = {}) {
+    if (!this.contains(element)) {
+      this.add(element, options)
+    } else {
+      this.update(element, options)
+    }
+  }
+
+  remove(element) {
+    const parallax = this.get(element)
+    if (!parallax) { return }
+    this.removeFromParallaxList(parallax)
+    parallax.destroy()
+  }
+
+  update(element = null, options = {}) {
     this.calculateLayout()
     this.forceResizeParallax = true
+    if (element && this.contains(element)) {
+      this.get(element).update(options)
+    }
   }
 
   addToParallaxList(instance) {

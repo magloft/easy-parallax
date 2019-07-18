@@ -2,23 +2,34 @@
   "name": "easy-parallax",
   "version": "1.0.2",
   "main": "dist/easy-parallax.js",
+  "author": "Tobias Strebitzer <tobias.strebitzer@magloft.com>",
   "license": "MIT",
   "scripts": {
-    "dist": "gulp dist"
+    "watch": "webpack --config webpack.config.js --mode=development --watch",
+    "serve": "webpack-dev-server -d --config webpack.config.js --mode=development",
+    "dev": "webpack --config webpack.config.js -d --watch",
+    "prepack": "webpack --config webpack.config.js --mode=production",
+    "postpack": "rm dist/easy-parallax.js"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-env": "^1.6.1",
+    "@babel/core": "^7.5.4",
+    "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "@babel/preset-env": "^7.5.4",
+    "babel-loader": "^8.0.6",
     "eslint": "^4.17.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.6.1",
-    "gulp": "^3.9.1",
-    "gulp-better-rollup": "^3.1.0",
-    "gulp-rename": "^1.2.2",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-uglify": "^3.0.0"
+    "sass-loader": "^7.1.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5"
   }
 }
