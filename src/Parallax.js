@@ -44,8 +44,13 @@ export default class Parallax {
       pointerEvents: 'none',
       clipPath: 'inset(0px)'
     }
-    let imageStyles = {
-      position: this.options.type === 'scroll' ? 'absolute' : 'fixed'
+    let imageStyles = { position: 'absolute' }
+    if (this.options.type === 'static') {
+      imageStyles.position = 'fixed'
+      imageStyles.left = '0px'
+      imageStyles.top = '0px'
+      imageStyles.width = '100%'
+      imageStyles.height = '100%'
     }
 
     // set relative position and z-index to the parent
@@ -154,12 +159,22 @@ export default class Parallax {
     const resultMT = isScroll ? (this.stage.height - resultH) / 2 : (rect.height - resultH) / 2
 
     // apply result to item
-    setStyles(this.imageElement, {
-      height: `${resultH}px`,
-      marginTop: `${resultMT}px`,
-      left: '0',
-      width: `${rect.width}px`
-    })
+    if (this.options.type === 'scroll') {
+      setStyles(this.imageElement, {
+        marginTop: `${resultMT}px`,
+        left: '0',
+        height: `${resultH}px`,
+        width: `${rect.width}px`
+      })
+    } else {
+      setStyles(this.imageElement, {
+        marginTop: '0',
+        left: '0',
+        top: '0',
+        height: '100%',
+        width: '100%'
+      })
+    }
   }
 
   isVisible() {
