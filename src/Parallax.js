@@ -41,10 +41,11 @@ export default class Parallax {
       width: '100%',
       height: '100%',
       overflow: 'hidden',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      clipPath: 'inset(0px)'
     }
     let imageStyles = {
-      position: 'absolute'
+      position: this.options.type === 'scroll' ? 'absolute' : 'fixed'
     }
 
     // set relative position and z-index to the parent
@@ -156,7 +157,7 @@ export default class Parallax {
     setStyles(this.imageElement, {
       height: `${resultH}px`,
       marginTop: `${resultMT}px`,
-      left: POSITION === 'fixed' ? `${rect.x}px` : '0',
+      left: '0',
       width: `${rect.width}px`
     })
   }
