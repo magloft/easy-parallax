@@ -1,6 +1,6 @@
-import { isAndroid, isIOs, getStyle, setStyles } from './util'
+import { getStyle, setStyles } from './util'
 
-const POSITION = isAndroid || isIOs ? 'absolute' : 'fixed'
+const POSITION = 'absolute'
 
 export default class Parallax {
   constructor(stage, element, { speed = 0.6, type = 'scroll' } = {}) {
@@ -43,7 +43,9 @@ export default class Parallax {
       overflow: 'hidden',
       pointerEvents: 'none'
     }
-    let imageStyles = {}
+    let imageStyles = {
+      position: 'absolute'
+    }
 
     // set relative position and z-index to the parent
     if (getStyle(this.container, 'position') === 'static') {
@@ -85,16 +87,12 @@ export default class Parallax {
       }, containerStyles, imageStyles)
     }
 
-    // add position to parallax block
-    imageStyles.position = POSITION
-
     // insert parallax image
     setStyles(this.imageElement, imageStyles)
     this.$container.appendChild(this.imageElement)
 
     // set initial position and size
     this.coverImage()
-    this.clipContainer()
     this.onScroll(true)
 
     // remove default user background
@@ -118,41 +116,6 @@ export default class Parallax {
       }
     }
     this.stage.update()
-  }
-
-  clipContainer() {
-    // needed only when background in fixed position
-    if (POSITION !== 'fixed') { return }
-
-    const rect = this.$container.getBoundingClientRect()
-    const { width, height } = rect
-
-    if (!this.$clipStyles) {
-      this.$clipStyles = this.stage.document.createElement('style')
-      this.$clipStyles.setAttribute('type', 'text/css')
-      this.$clipStyles.setAttribute('id', `parallax-clip-${this.instanceID}`)
-      const doc = this.imageElement.getRootNode()
-      let styleTarget
-      if (doc.nodeType === Document.DOCUMENT_FRAGMENT_NODE) {
-        styleTarget = doc
-      } else if (doc.nodeType === Document.DOCUMENT_NODE) {
-        styleTarget = doc.head || doc.getElementsByTagName('head')[0]
-      } else {
-        throw new Error('Invalid document node type')
-      }
-      styleTarget.appendChild(this.$clipStyles)
-    }
-
-    const styles = `#parallax-container-${this.instanceID} {
-        clip: rect(0 ${width}px ${height}px 0);
-        clip: rect(0, ${width}px, ${height}px, 0);
-    }`
-
-    if (this.$clipStyles.styleSheet) {
-      this.$clipStyles.styleSheet.cssText = styles
-    } else {
-      this.$clipStyles.innerHTML = styles
-    }
   }
 
   coverImage() {
@@ -193,7 +156,7 @@ export default class Parallax {
     setStyles(this.imageElement, {
       height: `${resultH}px`,
       marginTop: `${resultMT}px`,
-      left: POSITION === 'fixed' ? `${rect.left}px` : '0',
+      left: POSITION === 'fixed' ? `${rect.x}px` : '0',
       width: `${rect.width}px`
     })
   }
@@ -224,7 +187,6 @@ export default class Parallax {
 
   onResize() {
     this.coverImage()
-    this.clipContainer()
   }
 
   destroy() {
