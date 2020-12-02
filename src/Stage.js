@@ -18,6 +18,7 @@ class Stage {
     this.window.addEventListener('orientationchange', () => {
       this.calculateLayout()
     })
+    this.calculateLayout()
   }
 
   nextInstanceID() {

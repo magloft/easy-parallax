@@ -31,7 +31,7 @@ export default class Parallax {
     if (this.image) {
       this.imageElement = this.image.cloneNode(true)
       this.useImgTag = true
-      setStyles(this.image, { position: 'relative', display: 'block', maxWidth: '100%', height: 'auto', opacity: 0, zIndex: -100 })
+      setStyles(this.image, { 'position': 'relative', 'display': 'block', 'max-width': '100%', 'height': 'auto', 'opacity': 0, 'z-index': -100 })
     }
 
     const containerStyles = {
@@ -55,7 +55,7 @@ export default class Parallax {
 
     // set relative position and z-index to the parent
     if (getStyle(this.container, 'position') === 'static') {
-      setStyles(this.container, { position: 'relative' })
+      setStyles(this.container, { 'position': 'relative' })
     }
     if (getStyle(this.container, 'z-index') === 'auto') {
       setStyles(this.container, { zIndex: 0 })
@@ -161,18 +161,18 @@ export default class Parallax {
     // apply result to item
     if (this.options.type === 'scroll') {
       setStyles(this.imageElement, {
-        marginTop: `${resultMT}px`,
-        left: '0',
-        height: `${resultH}px`,
-        width: `${rect.width}px`
+        'margin-top': `${resultMT}px`,
+        'left': '0',
+        'height': `${resultH}px`,
+        'width': `${rect.width}px`
       })
     } else {
       setStyles(this.imageElement, {
-        marginTop: '0',
-        left: '0',
-        top: '0',
-        height: '100%',
-        width: '100%'
+        'margin-top': '0',
+        'left': '0',
+        'top': '0',
+        'height': '100%',
+        'width': '100%'
       })
     }
   }
@@ -209,11 +209,11 @@ export default class Parallax {
     this.container.style.zIndex = null
 
     if (this.useImgTag) {
-      setStyles(this.image, { position: null, display: null, maxWidth: null, height: null, zIndex: null, opacity: null })
+      setStyles(this.image, { 'position': null, 'display': null, 'max-width': null, 'height': null, 'z-index': null, 'opacity': null })
       this.imageElement.removeAttribute('style')
       this.container.replaceWith(this.image)
     } else {
-      setStyles(this.container, { backgroundImage: this.imageElement.style.backgroundImage })
+      setStyles(this.container, { 'background-image': this.imageElement.style.backgroundImage })
     }
 
     if (this.$clipStyles && this.$clipStyles.parentNode) {

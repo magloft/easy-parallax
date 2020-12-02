@@ -8,6 +8,6 @@ export function getStyle(element, cssProperty) {
 
 export function setStyles(element, cssProperties) {
   for (const [cssProperty, value] of Object.entries(cssProperties)) {
-    element.style[cssProperty] = value
+    element.style.setProperty(cssProperty, value, 'important')
   }
 }

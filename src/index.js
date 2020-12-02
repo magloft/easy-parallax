@@ -3,6 +3,6 @@ import Parallax from './Parallax'
 
 export { Stage, Parallax }
 
-export default function(win = window) {
+export function EasyParallax(win = window) {
   return new Stage(win)
 }

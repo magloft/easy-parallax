@@ -2,6 +2,7 @@
   "name": "easy-parallax",
   "version": "2.0.4",
   "main": "dist/easy-parallax.js",
+  "types": "dist/easy-parallax.d.ts",
   "author": "Tobias Strebitzer <tobias.strebitzer@magloft.com>",
   "license": "MIT",
   "scripts": {

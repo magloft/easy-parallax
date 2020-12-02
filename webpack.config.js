@@ -10,9 +10,7 @@ module.exports = (env, argv) => {
     entry: { 'easy-parallax': './src/index.js' },
     output: {
       path: path.resolve(__dirname, './dist'),
-      library: 'easyParallax',
-      libraryExport: 'default',
-      libraryTarget: 'umd',
+      libraryTarget: 'amd',
       filename: '[name].js'
     },
     module: {
