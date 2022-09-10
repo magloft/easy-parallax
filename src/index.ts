@@ -1,5 +1,5 @@
-import Stage from './Stage'
-import Parallax from './Parallax'
+import { Parallax } from './Parallax'
+import { Stage } from './Stage'
 
 export { Stage, Parallax }
 

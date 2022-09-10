@@ -1,36 +1,21 @@
 {
   "name": "easy-parallax",
-  "version": "3.0.0",
-  "main": "dist/easy-parallax.js",
-  "types": "dist/easy-parallax.d.ts",
+  "version": "4.0.0",
   "author": "Tobias Strebitzer <tobias.strebitzer@magloft.com>",
   "license": "MIT",
+  "types": "build/cjs/index.d.ts",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
   "scripts": {
-    "watch": "webpack --config webpack.config.js --mode=development --watch",
-    "serve": "webpack-dev-server -d --config webpack.config.js --mode=development",
-    "dev": "webpack --config webpack.config.js -d --watch",
-    "prepack": "webpack --config webpack.config.js --mode=production",
-    "postpack": "rm dist/easy-parallax.js"
+    "clean": "rimraf build",
+    "build": "rollup -c",
+    "watch": "yarn build --watch",
+    "prepack": "yarn clean && yarn build",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/plugin-external-helpers": "^7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.5.0",
-    "@babel/preset-env": "^7.5.4",
-    "babel-loader": "^8.0.6",
-    "eslint": "^4.17.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.6.1",
-    "sass-loader": "^7.1.0",
-    "uglifyjs-webpack-plugin": "^2.0.1",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.8"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.5.5"
+    "@magloft/eslint-config": "~1.0.10",
+    "@magloft/devkit-core": "~1.0.10",
+    "@magloft/devkit-rollup": "~1.0.10"
   }
 }

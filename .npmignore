@@ -1,4 +1,8 @@
 .eslintignore
-.eslintrc.json
-dist/index.html
-webpack.config.js
+.eslintrc
+index.html
+rollup.config.js
+tsconfig.json
+.vscode/
+src/
+*.log

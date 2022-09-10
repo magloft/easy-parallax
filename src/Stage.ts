@@ -1,23 +1,28 @@
+import { Parallax, ParallaxOptions } from './Parallax'
 import { requestAnimationFrame } from './util'
-import Parallax from './Parallax'
 
-class Stage {
-  constructor(window) {
+export interface PageData {
+  width: number
+  height: number
+  scrollTop: number
+}
+
+export class Stage {
+  public window: Window
+  public document: Document
+  public instanceID = 0
+  public parallaxList: Parallax[] = []
+  public width!: number
+  public height!: number
+  public scrollTop!: number
+  public forceResizeParallax = false
+  public oldPageData?: PageData
+
+  constructor(window: Window) {
     this.window = window
     this.document = window.document
-    this.instanceID = 0
-    this.parallaxList = []
-    this.width = null
-    this.height = null
-    this.scrollTop = null
-    this.forceResizeParallax = false
-    this.oldPageData = false
-    this.window.addEventListener('resize', () => {
-      this.calculateLayout()
-    })
-    this.window.addEventListener('orientationchange', () => {
-      this.calculateLayout()
-    })
+    this.window.addEventListener('resize', () => { this.calculateLayout() })
+    this.window.addEventListener('orientationchange', () => { this.calculateLayout() })
     this.calculateLayout()
   }
 
@@ -26,15 +31,15 @@ class Stage {
     return this.instanceID
   }
 
-  get(element) {
+  get(element: HTMLElement) {
     return this.parallaxList.find((parallax) => parallax.element === element)
   }
 
-  contains(element) {
+  contains(element: HTMLElement) {
     return this.get(element) != null
   }
 
-  add(element, options = {}) {
+  add(element: HTMLElement, options?: Partial<ParallaxOptions>) {
     if (this.contains(element)) { return null }
     const parallax = new Parallax(this, element, options)
     this.addToParallaxList(parallax)
@@ -42,7 +47,7 @@ class Stage {
     return parallax
   }
 
-  force(element, options = {}) {
+  force(element: HTMLElement, options?: Partial<ParallaxOptions>) {
     if (!this.contains(element)) {
       this.add(element, options)
     } else {
@@ -50,29 +55,29 @@ class Stage {
     }
   }
 
-  remove(element) {
+  remove(element: HTMLElement) {
     const parallax = this.get(element)
     if (!parallax) { return }
     this.removeFromParallaxList(parallax)
     parallax.destroy()
   }
 
-  update(element = null, options = {}) {
+  update(element?: HTMLElement, options?: Partial<ParallaxOptions>) {
     this.calculateLayout()
     this.forceResizeParallax = true
     if (element && this.contains(element)) {
-      this.get(element).update(options)
+      this.get(element)?.update(options)
     }
   }
 
-  addToParallaxList(instance) {
+  addToParallaxList(instance: Parallax) {
     this.parallaxList.push(instance)
     if (this.parallaxList.length === 1) {
       this.updateParallax()
     }
   }
 
-  removeFromParallaxList(instance) {
+  removeFromParallaxList(instance: Parallax) {
     this.parallaxList.forEach((item, key) => {
       if (item.instanceID === instance.instanceID) {
         this.parallaxList.splice(key, 1)
@@ -121,5 +126,3 @@ class Stage {
     this.height = this.window.innerHeight || this.window.document.documentElement.clientHeight
   }
 }
-
-export default Stage

@@ -1,12 +1,32 @@
+import { Stage } from './Stage'
 import { getStyle, setStyles } from './util'
 
 const POSITION = 'absolute'
 
-export default class Parallax {
-  constructor(stage, element, { speed = 0.6, type = 'scroll' } = {}) {
+export interface ParallaxOptions {
+  speed: number
+  type: 'scroll' | 'static'
+}
+
+export class Parallax {
+  public stage: Stage
+  public element: HTMLElement
+  public options: ParallaxOptions
+  public instanceID: number
+  public container!: HTMLElement
+  public image!: HTMLImageElement
+  public useImgTag = false
+  public src!: string
+  public imageElement!: HTMLImageElement
+  public $container!: HTMLElement
+  public parallaxScrollDistance!: number
+  public isElementInViewport!: boolean
+  public $clipStyles?: HTMLElement
+
+  constructor(stage: Stage, element: HTMLElement, options: Partial<ParallaxOptions> = {}) {
     this.stage = stage
     this.element = element
-    this.options = { type, speed }
+    this.options = { speed: options.speed ?? 0.6, type: options.type ?? 'scroll' }
     this.instanceID = this.stage.nextInstanceID()
 
     if (element.tagName === 'IMG') {
@@ -18,33 +38,33 @@ export default class Parallax {
         shadowRoot.insertBefore(this.container, element)
       }
       this.container.appendChild(element)
-      this.image = element
+      this.image = element as HTMLImageElement
       this.useImgTag = true
     } else if (getStyle(element, 'background-image')) {
       this.container = element
       const backgroundImage = getStyle(element, 'background-image')
-      this.src = backgroundImage.match(/^url\(['"]?([^"')]+)['"]?\)$/)[1]
+      this.src = backgroundImage.match(/^url\(['"]?([^"')]+)['"]?\)$/)![1]
       this.useImgTag = false
     }
 
     // find image element
     if (this.image) {
-      this.imageElement = this.image.cloneNode(true)
+      this.imageElement = this.image.cloneNode(true) as HTMLImageElement
       this.useImgTag = true
-      setStyles(this.image, { 'position': 'relative', 'display': 'block', 'max-width': '100%', 'height': 'auto', 'opacity': 0, 'z-index': -100 })
+      setStyles(this.image, { 'position': 'relative', 'display': 'block', 'max-width': '100%', 'height': 'auto', 'opacity': '0', 'z-index': '-100' })
     }
 
     const containerStyles = {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: '0',
+      left: '0',
       width: '100%',
       height: '100%',
       overflow: 'hidden',
       pointerEvents: 'none',
       clipPath: 'inset(0px)'
     }
-    let imageStyles = { position: 'absolute' }
+    let imageStyles: Record<string, string> = { position: 'absolute' }
     if (this.options.type === 'static') {
       imageStyles.position = 'fixed'
       imageStyles.left = '0px'
@@ -58,12 +78,12 @@ export default class Parallax {
       setStyles(this.container, { 'position': 'relative' })
     }
     if (getStyle(this.container, 'z-index') === 'auto') {
-      setStyles(this.container, { zIndex: 0 })
+      setStyles(this.container, { zIndex: '0' })
     }
 
     // container for parallax image
     this.$container = this.stage.document.createElement('div')
-    setStyles(this.$container, { ...containerStyles, zIndex: -100 })
+    setStyles(this.$container, { ...containerStyles, zIndex: '-100' })
     this.$container.setAttribute('id', `parallax-container-${this.instanceID}`)
     if (this.container.shadowRoot) {
       this.container.shadowRoot.appendChild(this.$container)
@@ -76,7 +96,7 @@ export default class Parallax {
       imageStyles = Object.assign({
         'object-fit': 'cover',
         'object-position': '50% 50%',
-        'font-family': `object-fit: cover; object-position: 50% 50%;`,
+        'font-family': 'object-fit: cover; object-position: 50% 50%;',
         'max-width': 'none'
       }, containerStyles, imageStyles)
       this.imageElement.onload = () => {
@@ -84,7 +104,7 @@ export default class Parallax {
       }
     } else {
       // use div with background image
-      this.imageElement = this.stage.document.createElement('div')
+      this.imageElement = this.stage.document.createElement('div') as HTMLImageElement
       imageStyles = Object.assign({
         'background-position': '50% 50%',
         'background-size': 'cover',
@@ -114,7 +134,7 @@ export default class Parallax {
         this.imageElement.src = this.image.src
       }
     } else {
-      this.container.style.backgroundImage = null
+      this.container.style.backgroundImage = ''
       const backgroundImage = getStyle(this.container, 'background-image')
       this.container.style.backgroundImage = 'none'
       if (this.imageElement.style.backgroundImage !== backgroundImage) {
@@ -181,9 +201,9 @@ export default class Parallax {
     return this.isElementInViewport || false
   }
 
-  onScroll(force) {
+  onScroll(force = false) {
     const rect = this.container.getBoundingClientRect()
-    const styles = {}
+    const styles: Record<string, string> = {}
 
     // check if in viewport
     this.isElementInViewport = rect.bottom >= 0 && rect.right >= 0 && rect.top <= this.stage.height && rect.left <= this.stage.width
@@ -206,7 +226,7 @@ export default class Parallax {
   }
 
   destroy() {
-    this.container.style.zIndex = null
+    this.container.style.zIndex = ''
 
     if (this.useImgTag) {
       setStyles(this.image, { 'position': null, 'display': null, 'max-width': null, 'height': null, 'z-index': null, 'opacity': null })
@@ -216,11 +236,7 @@ export default class Parallax {
       setStyles(this.container, { 'background-image': this.imageElement.style.backgroundImage })
     }
 
-    if (this.$clipStyles && this.$clipStyles.parentNode) {
-      this.$clipStyles.parentNode.removeChild(this.$clipStyles)
-    }
-    if (this.$container && this.$container.parentNode) {
-      this.$container.parentNode.removeChild(this.$container)
-    }
+    if (this.$clipStyles?.parentNode) { this.$clipStyles.parentNode.removeChild(this.$clipStyles) }
+    if (this.$container?.parentNode) { this.$container.parentNode.removeChild(this.$container) }
   }
 }

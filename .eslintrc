@@ -1,0 +1,5 @@
+{
+  "extends": "@magloft/eslint-config",
+  "globals": { "MagloftApi": "readonly" },
+  "parserOptions": { "project": "./tsconfig.json" }
+}
